@@ -10,12 +10,13 @@
 ## ✨ Features
 
 - **🚀 Instant Age**: Calculate age in years, months, weeks, or days.
-- **📅 Flexible Parsing**: Automatically handles formats like `YYYY-MM-DD`, `YYYY.MM.DD`, `YYYY/MM/DD`, or even spaces.
-- **♈ Zodiac Magic**: Get star signs (Aries, Leo, etc.) instantly from a DOB.
+- **�️ Strict Validation**: Automatically catches invalid months (e.g., month 22) or invalid days (e.g., Feb 30).
+- **📅 Customizable Formats**: Supports ANY date format (e.g., `DD-MM-YYYY`, `MM.DD.YYYY`, `YYYY/MM/DD`).
+- **🔞 Age Verification**: One-line checks for account eligibility (e.g., `is_adult()`).
+- **♈ Zodiac Magic**: Get star signs instantly from a DOB.
 - **🎂 Birthday Insights**: Countdown to the next birthday and find out what day of the week it falls on.
-- **👶 Age Classification**: Automatically classify life stages (Infant, Child, Teen, Adult, Senior).
-- **🌗 Multi-Cultural**: Includes basic Hijri lunar age approximation.
-- **🤝 Comparisons**: Compare two different birth dates to see who is older and by exactly how many days.
+- **👶 Age Classification**: Infant, Child, Teen, Adult, Senior.
+- **🌗 Multi-Cultural**: Basic Hijri lunar age approximation.
 
 ---
 
@@ -29,63 +30,66 @@ pip install agewizard
 
 ## 📖 Detailed Usage
 
-### 1. Interactive User Input (The Easiest Way)
-Agewizard is built for real-world apps where users provide input.
+### 1. Strict Validation & Error Handling
+Agewizard ensures you never process "fake" dates.
 
 ```python
 from agewizard import Age
-
-# Get input from user
-user_dob = input("Enter your Date of Birth (YYYY-MM-DD): ")
 
 try:
-    person = Age(user_dob)
-    print(f"Wizard says you are {person.years} years old!")
-    print(f"Your star sign is {person.zodiac}.")
-    print(f"Days until your next cake: {person.next_birthday_days}")
-except Exception as e:
-    print(f"Error: {e}")
+    # This will raise a helpful ValueError
+    user = Age("2021-02-30") 
+except ValueError as e:
+    print(f"Invalid date: {e}")
 ```
 
-### 2. The Comprehensive `Age` Object
-One object, all the data.
+### 2. Custom Date Formats (Global Support)
+Different countries use different formats. Agewizard handles them all.
 
 ```python
 from agewizard import Age
 
-p = Age("1995-05-15")
+# UK/Europe Format
+uk_user = Age("31-12-1990", date_format="DD-MM-YYYY")
 
-print(p.years)           # 30
-print(p.months)          # 368
-print(p.days)            # 11210
-print(p.readable)        # "30 years, 7 months, 24 days"
-print(p.category)        # "Adult"
-print(p.is_today)        # True if it's their birthday!
+# US Format
+us_user = Age("12.31.1990", date_format="MM.DD.YYYY")
+
+# Default (Auto-detects YYYY-MM-DD or DD-MM-YYYY)
+auto_user = Age("2000-01-01")
 ```
 
-### 3. Comparing Two People
-Perfect for social apps or family statistics.
+### 3. One-Line Age Verification
+Perfect for apps that require a minimum age (like 18+).
 
 ```python
-from agewizard import compare_ages
+from agewizard import Age
 
-result = compare_ages("1990-01-01", "1995-05-15")
-print(result) # "Person 1 is older by approx 5 years (1960 days)."
+user_dob = input("Enter your DOB: ")
+person = Age(user_dob)
+
+if person.is_adult():
+    print("✅ Access Granted: 18+")
+else:
+    print(f"❌ Access Denied: You are only {person.years}")
+
+# Custom age checks
+if person.is_over(21):
+    print("🥃 You can enter the bar.")
 ```
 
-### 4. Specialized Logic
+### 4. Interactive User Input Example
 ```python
-from agewizard import is_leap_year, next_birthday_weekday
+from agewizard import Age
 
-print(is_leap_year("2000-01-01")) # True
-print(next_birthday_weekday("2000-01-01")) # "Thursday"
+dob_input = input("Birth Date (DD-MM-YYYY): ")
+try:
+    p = Age(dob_input, date_format="DD-MM-YYYY")
+    print(f"Wizard Result: {p.readable}")
+    print(f"Zodiac: {p.zodiac}")
+except ValueError as e:
+    print(f"Please check your input: {e}")
 ```
-
----
-
-## 💎 Why Agewizard?
-
-Most libraries require complex `datetime` arithmetic. Agewizard wraps all that complexity into a **Fluent API** that reads like a story. It's built for developers who value their time and want clean, production-ready code.
 
 ---
 

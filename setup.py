@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="agewizard",          # Package name on PyPI
-    version="0.1.0",         # Start small
+    version="0.2.0",         # Added validation and custom formats
     packages=find_packages(),
     install_requires=[],     # Dependencies (none if pure Python)
     python_requires=">=3.6",
